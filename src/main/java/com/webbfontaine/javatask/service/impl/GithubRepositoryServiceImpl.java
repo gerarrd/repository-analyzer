@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.webbfontaine.javatask.helper.GithubCommitsPerDayHelper;
 import com.webbfontaine.javatask.helper.GithubRepositoryAnalysisHelper;
+import com.webbfontaine.javatask.helper.GithubRepositoryDatatableHelper;
 import com.webbfontaine.javatask.model.GithubCommit;
+import com.webbfontaine.javatask.model.GithubRepositorySearchResult;
 import com.webbfontaine.javatask.model.GithubUser;
 import com.webbfontaine.javatask.restservice.GithubRestService;
 import com.webbfontaine.javatask.service.GithubRepositoryService;
@@ -63,6 +65,15 @@ public class GithubRepositoryServiceImpl implements GithubRepositoryService {
 		contributors.forEach(contributor -> contributor.adjustImpact(lastHundredCommits.size()));
 
 		helper.setCommitsPerDay(overallDailyCommits);
+		return helper;
+	}
+
+	@Override
+	public GithubRepositoryDatatableHelper getRepositories(String search, Long offset, Long limit) {
+		GithubRepositorySearchResult result = githubRestService.getRepositories(search);
+		GithubRepositoryDatatableHelper helper = new GithubRepositoryDatatableHelper();
+		helper.setTotal(new Long(result.getTotalCount()));
+		helper.setRows(result.getItems());
 		return helper;
 	}
 }

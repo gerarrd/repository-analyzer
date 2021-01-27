@@ -28,7 +28,7 @@ public class GithubRestServiceImpl implements GithubRestService {
 	public GithubRestServiceImpl(RestTemplate restTemplate) {
 		super();
 		this.restTemplate = restTemplate;
-		searchRepoByNameURLTemplate = "https://api.github.com/search/repositories?q=%s is:public";
+		searchRepoByNameURLTemplate = "https://api.github.com/search/repositories?q=%s is:public&per_page=%s&page=%s";
 		getRepositoryDetailsURLTemplate = "https://api.github.com/repos/%s";
 		getRepositoryContributorsURLTemplate = getRepositoryDetailsURLTemplate + "/contributors?per_page=100&";
 		getLastHundredCommitsURLTemplate = getRepositoryDetailsURLTemplate + "/commits?per_page=100&merge=exclude";
@@ -37,7 +37,7 @@ public class GithubRestServiceImpl implements GithubRestService {
 	@Override
 	public GithubRepositorySearchResult getRepositories(String likeString) {
 		ResponseEntity<GithubRepositorySearchResult> response = restTemplate.exchange(
-				String.format(searchRepoByNameURLTemplate, likeString), HttpMethod.GET, null,
+				String.format(searchRepoByNameURLTemplate, likeString, 10, 1), HttpMethod.GET, null,
 				GithubRepositorySearchResult.class);
 
 		if (response.getStatusCode() == HttpStatus.OK) {
@@ -75,6 +75,19 @@ public class GithubRestServiceImpl implements GithubRestService {
 	public List<GithubCommit> getLastHundredCommits(String fullName) {
 		ResponseEntity<List<GithubCommit>> response = restTemplate.exchange(
 				String.format(getLastHundredCommitsURLTemplate, fullName), HttpMethod.GET, null, new ParameterizedTypeReference<List<GithubCommit>>() {});
+
+		if (response.getStatusCode() == HttpStatus.OK) {
+			return response.getBody();
+		}
+
+		return null;
+	}
+
+	@Override
+	public GithubRepositorySearchResult getRepositories(String likeString, Long page, Long perPage) {
+		ResponseEntity<GithubRepositorySearchResult> response = restTemplate.exchange(
+				String.format(searchRepoByNameURLTemplate, likeString, perPage, page), HttpMethod.GET, null,
+				GithubRepositorySearchResult.class);
 
 		if (response.getStatusCode() == HttpStatus.OK) {
 			return response.getBody();

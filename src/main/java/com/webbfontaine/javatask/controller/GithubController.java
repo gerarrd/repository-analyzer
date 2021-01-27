@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webbfontaine.javatask.helper.GithubRepositoryAnalysisHelper;
+import com.webbfontaine.javatask.helper.GithubRepositoryDatatableHelper;
 import com.webbfontaine.javatask.model.GithubRepository;
 import com.webbfontaine.javatask.model.GithubRepositorySearchResult;
 import com.webbfontaine.javatask.restservice.GithubRestService;
@@ -25,6 +26,15 @@ public class GithubController {
 	@GetMapping("repositories")
 	public GithubRepositorySearchResult getRepositories(@RequestParam("queryString") String queryString) {
 		return githubRestService.getRepositories(queryString);
+	}
+	
+	@GetMapping("list-repositories")
+	public GithubRepositoryDatatableHelper getRepositories(
+		@RequestParam(value="search", required=false, defaultValue="") String search,
+		@RequestParam(value="offset", required=false, defaultValue="0") Long offset,
+		@RequestParam(value="limit", required=false, defaultValue="10") Long limit
+	) {
+		return githubRepositoryService.getRepositories(search, limit, offset);
 	}
 	
 	@GetMapping("repository-details")
