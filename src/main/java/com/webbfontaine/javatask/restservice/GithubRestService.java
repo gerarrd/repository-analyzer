@@ -8,8 +8,6 @@ import com.webbfontaine.javatask.model.GithubRepositorySearchResult;
 import com.webbfontaine.javatask.model.GithubUser;
 
 public interface GithubRestService {
-	public GithubRepositorySearchResult getRepositories(String likeString);
-	
 	public GithubRepositorySearchResult getRepositories(String likeString, Long page, Long perPage);
 	
 	public GithubRepository getRepositoryDetails(String fullName);

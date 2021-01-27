@@ -34,20 +34,6 @@ public class GithubRestServiceImpl implements GithubRestService {
 		getLastHundredCommitsURLTemplate = getRepositoryDetailsURLTemplate + "/commits?per_page=100&merge=exclude";
 	}
 
-	@Override
-	public GithubRepositorySearchResult getRepositories(String likeString) {
-		ResponseEntity<GithubRepositorySearchResult> response = restTemplate.exchange(
-				String.format(searchRepoByNameURLTemplate, likeString, 10, 1), HttpMethod.GET, null,
-				GithubRepositorySearchResult.class);
-
-		if (response.getStatusCode() == HttpStatus.OK) {
-			return response.getBody();
-		}
-
-		return null;
-	}
-
-	@Override
 	public GithubRepository getRepositoryDetails(String fullName) {
 		ResponseEntity<GithubRepository> response = restTemplate.exchange(
 				String.format(getRepositoryDetailsURLTemplate, fullName), HttpMethod.GET, null, GithubRepository.class);

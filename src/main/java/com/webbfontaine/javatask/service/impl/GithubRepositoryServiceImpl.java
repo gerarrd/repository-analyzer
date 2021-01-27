@@ -70,7 +70,8 @@ public class GithubRepositoryServiceImpl implements GithubRepositoryService {
 
 	@Override
 	public GithubRepositoryDatatableHelper getRepositories(String search, Long offset, Long limit) {
-		GithubRepositorySearchResult result = githubRestService.getRepositories(search);
+		Long page = (offset / limit) + 1;
+		GithubRepositorySearchResult result = githubRestService.getRepositories(search, page, limit);
 		GithubRepositoryDatatableHelper helper = new GithubRepositoryDatatableHelper();
 		helper.setTotal(new Long(result.getTotalCount()));
 		helper.setRows(result.getItems());
